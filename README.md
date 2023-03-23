@@ -9,8 +9,9 @@ Examples of services with free API access tiers are below (pick one or two, and 
 * Abuse IPDB (https://www.abuseipdb.com/api.html)
 * ARIN (https://www.arin.net/resources/registry/whois/rws/api/)
 * SecurityTrails (https://docs.securitytrails.com/docs/overview)
-* Proofpoint Emerging Threats (https://rules.emergingthreats.net/))
+* Proofpoint Emerging Threats (https://rules.emergingthreats.net/)
 * Threat Jammer (https://threatjammer.com/docs/threat-jammer-api-keys)
+* IP GeoLocation API (https://ipgeolocation.io/)
 
 # Prerequisites
 1. Python 3.8+
