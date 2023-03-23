@@ -24,7 +24,10 @@ Examples of services with free API access tiers are below (pick one or two, and 
 4. Create the virtual environment: `python -m venv .`
 5. Activate the virtual environment: `.\Scripts\activate`
 6. Install the required packages: `pip3 install -r requirements.txt`
-7. Create the config file (Add your API Key): `@{"vt_api_key"="YOUR_API_KEY_HERE";"vt_api_url"="https://www.virustotal.com/api/v3"} | ConvertTo-Json | Out-File .\minirep.json`
+7. Create the config file (update the command with your API key from VT): 
+```PowerShell
+@{"vt_api_key"="YOUR_API_KEY_HERE";"vt_api_url"="https://www.virustotal.com/api/v3"} | ConvertTo-Json | Out-File .\minirep.json`
+```
 8. Run minirep.py: `python3 minirep.py`
 
 # Installation (Linux)
