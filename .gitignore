@@ -2,7 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+# Scripts dir
+/scripts
+pyvenv.cfg
 # C extensions
 *.so
 
@@ -127,3 +129,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+minirep.json
