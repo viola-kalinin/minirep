@@ -53,6 +53,6 @@ Based on the data you gather, render a verdict of either `DENY`, `ALERT`, `PASS`
 * Passed IPs will be ignored
 
 # Outcomes
-- Interact with API services programatically
+- Interact with API services
 - Understand IP reputation services and how they can assist with making decisions to protect your network
 - Understand the limitations of these services (e.g. true & false positives, transience of IPs, etc.)

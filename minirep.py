@@ -3,10 +3,9 @@
 import argparse
 import json
 import os
+import re
 import requests
 from os.path import dirname
-
-
 
 def fetch_vt_reputation(address,config):
 
@@ -18,7 +17,18 @@ def fetch_vt_reputation(address,config):
         print(f"Failed VT IP address lookup for {address}. Status code: {response.status_code}. Message: {response.text}")
         return
 
-
+def parse_whois(vt_rep):
+    # Parse the whois string and add to whois_dict
+    whois_data = re.split("\r\n|\n",vt_rep['data']['attributes']['whois'])
+    if len(whois_data) > 1:
+        whois_dict = {}
+        for entry in whois_data:
+            split = [x.strip() for x in entry.split(':')]
+            if len(split) == 2:
+                if split[0] not in whois_dict:
+                    whois_dict[split[0]] = split[1]
+        return whois_dict
+    
 def main(args):
 
     # If no address was supplied, prompt
@@ -38,8 +48,17 @@ def main(args):
 
     # Query VirusTotal for IP reputation
     if vt_rep := fetch_vt_reputation(ip_addr,config):
-        print(vt_rep)
+        print(f"Reputation Score: {vt_rep['data']['attributes']['reputation']}")
+        print(f"Harmless Votes: {vt_rep['data']['attributes']['total_votes']['harmless']}")
+        print(f"Malicious Votes: {vt_rep['data']['attributes']['total_votes']['malicious']}")
 
+        
+        if whois_dict := parse_whois(vt_rep):
+            for key in whois_dict:
+                print(f"{key}: {whois_dict[key]}")
+    else:
+        print(f"Could not obtain reputation data from VirusTotal for {ip_addr}")  
+            
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
