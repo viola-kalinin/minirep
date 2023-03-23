@@ -34,16 +34,17 @@ Examples of services with free API access tiers are below (pick one or two, and 
 1. Install python3-virtualenv (this is dependent on the OS you are running): `sudo apt install python3.10-venv`
 2. Clone the repository: `git clone <URL of your forked repository>`
 3. Change directories into the repository folder: `cd minirep`
-4. Activate the virtual environment: `source ./bin/activate`
-5. Install the required packages: `pip3 install -r requirements.txt`
-6. Create the minirep.json config file: `vi minirep.json`
+4. Create the virtual environment: `python -m venv .`
+5. Activate the virtual environment: `source ./bin/activate`
+6. Install the required packages: `pip3 install -r requirements.txt`
+7. Create the minirep.json config file: `vi minirep.json`
 ```json
 {
     "vt_api_url":  "https://www.virustotal.com/api/v3",
     "vt_api_key":  "YOUR_API_KEY_HERE"
 }
 ```
-7. Run minirep.py: `python3 minirep.py`
+8. Run minirep.py: `python3 minirep.py`
 
 # Analysis
 Based on the data you gather, render a verdict of either `DENY`, `ALERT`, `PASS`. 
