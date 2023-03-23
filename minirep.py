@@ -4,7 +4,6 @@ import argparse
 import colorama
 import json
 import os
-import re
 import requests
 from os.path import dirname
 from termcolor import colored,cprint
@@ -86,7 +85,7 @@ def main(args):
     # Print the directions. Comment this out when you no longer need it
     render_directions()
 
-    # Query VirusTotal for IP reputation
+    # Query VirusTotal for IP reputation. Feel free to discard this section or use it in a different way
     if vt_rep := fetch_vt_reputation(ip_addr,config):
         cprint(colored("""
 ----------------------------
@@ -95,6 +94,10 @@ VIRUS TOTAL REPUTATION DATA
         print(f"Reputation Score: {vt_rep['data']['attributes']['reputation']}")
         print(f"Harmless Votes: {vt_rep['data']['attributes']['total_votes']['harmless']}")
         print(f"Malicious Votes: {vt_rep['data']['attributes']['total_votes']['malicious']}")
+
+
+    # Add your code here
+
 
 
         
