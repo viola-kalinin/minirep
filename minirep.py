@@ -76,7 +76,6 @@ def main(args):
     # Load config. Print warning and exit if not found
     try:
         config_file_path = os.path.join(dirname(os.path.realpath(__file__)),"minirep.json")
-        print(config_file_path)
         config = json.load(open(config_file_path))
     except Exception as e:
         print(f"Failed to load config file from {config_file_path}.\r\nException: {e}")
