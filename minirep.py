@@ -17,52 +17,31 @@ def fetch_vt_reputation(address,config):
     else:
         print(f"Failed VT IP address lookup for {address}. Status code: {response.status_code}. Message: {response.text}")
         return
-
-
-def render_directions():
-    cprint(colored("""
-----------------------------
-YOU DECIDE WHAT COMES NEXT
-----------------------------""","green"))
-    print("""
-SYNOPSIS
-You are working at a small business which is trying to incorporate threat
-intelligence information into its security program. One way of doing so is
-to gather IP intelligence to prevent connections to known-malicious IPs.
-Your security budget is $9.37, all that was left in the petty-cash drawer
-after the March birthdays celebration. You need to come up with a script
-to pull IP intelligence and incorporate it into your processes. 
-
-DIRECTIONS
-- Look through the APIs in the README section and pick one or two that can 
-  help you make the right decision.
-- Read the API documentation to determine how the data is structured, what
-  routes you should query and what parameters need to be passed.
-- Determine how you will incorporate the returned data into your decision-
-  making process.
-- Ultimately, you need to decide whether you want to DROP, ALERT, or PASS
-  connections to this device. For the first iteration, you may do this in
-  a few different ways:
-    1. An interactive prompt that asks you what action you would like to
-       perform after displaying relevant data from the APIs you query
-    2. Logic that analyzes the returned information and determines an 
-       action automatically.
-    3. A combination of the previous options.
-- Identify the issues with the approaches above.
-- Be careful what you block. Check the reputation scores of public DNS
-  services like 8.8.8.8 and 1.1.1.1. These are legitimate services, and
-  blocking these at your perimeter could be problematic.
-- Share your application with the class.
-
-EXAMPLE
-Below is an example that queries the VirusTotal IP reputation service.
-Consider how you might leverage this data to make a decision. Review
-their documentation to determine what goes into a particular score.
-Note that only a small subset of what is returned is printed. Feel free
-to explore the complete data set returned to aid your decision.
-""")
-        
-    
+def fetch_abuse_reputation(address,config):
+    querystring = {'ipAddress': address,'maxAgeInDays': '30'}
+    headers = {'Accept': 'application/json','key': config['ab_api_key']}
+    response = requests.request(method = "GET", url=f"{config['ab_api_url']}", headers=headers, params= querystring)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed Abuse IP address lookup for {address}. Status code: {response.status_code}. Message: {response.text}")
+        return
+def switch (score):
+    if score < 30:
+        return "PASS"
+    elif score <70:
+        return "ALLOW"
+    else:
+        return "BLOCK"
+def decision (input):
+    if input == "PASS":
+        return " is ignored"
+    elif input == "ALLLOW":
+        return " is being monitored"
+    elif input == "BLOCK":
+        return " is blocked via firewall"
+    else:
+        "incorrect option"
 def main(args):
 
     colorama.init()
@@ -81,26 +60,40 @@ def main(args):
         print(f"Failed to load config file from {config_file_path}.\r\nException: {e}")
         return
 
-    # Print the directions. Comment this out when you no longer need it
-    render_directions()
-
     # Query VirusTotal for IP reputation. Feel free to discard this section or use it in a different way
     if vt_rep := fetch_vt_reputation(ip_addr,config):
         cprint(colored("""
 ----------------------------
 VIRUS TOTAL REPUTATION DATA
 ----------------------------""",'green'))
+        print(f"Who Is: {vt_rep['data']['attributes']['as_owner']}")
+        print(f"Country: {vt_rep['data']['attributes']['country']}")
         print(f"Reputation Score: {vt_rep['data']['attributes']['reputation']}")
         print(f"Harmless Votes: {vt_rep['data']['attributes']['total_votes']['harmless']}")
         print(f"Malicious Votes: {vt_rep['data']['attributes']['total_votes']['malicious']}")
+   
+   
+    
+    if ab_rep := fetch_abuse_reputation(ip_addr,config):
+        cprint(colored("""
+----------------------------
+ABUSE IDPD REPUTATION DATA
+----------------------------""",'green')) 
+        print(f"Abuse Score: {ab_rep['data']['abuseConfidenceScore']}")
+        print(f"Usage: {ab_rep['data']['usageType']}")
+        print(f"Internet Service Provider: {ab_rep['data']['isp']}")
+        print(f"Last Report: {ab_rep['data']['lastReportedAt']}")   
 
+    if (ab_rep := fetch_abuse_reputation(ip_addr,config)) and (vt_rep := fetch_vt_reputation(ip_addr,config)):
+        cprint(colored("""
+-------------
+DECISION TIME
+-------------""",'green'))
+        print("Based on the data, we recommend the following:")
+        print(switch(int(ab_rep['data']['abuseConfidenceScore'])))
+        decide = input("Would you like to PASS, ALLOW, or DROP: ")
+        print(str(ip_addr) + decision(decide))
 
-    # Add your code here
-
-
-
-        
-            
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
