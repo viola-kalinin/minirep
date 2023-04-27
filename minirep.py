@@ -41,7 +41,7 @@ def decision (input):
     elif input == "BLOCK":
         return " is blocked via firewall"
     else:
-        "incorrect option"
+        return "incorrect option"
 def main(args):
 
     colorama.init()
@@ -91,7 +91,7 @@ DECISION TIME
 -------------""",'green'))
         print("Based on the data, we recommend the following:")
         print(switch(int(ab_rep['data']['abuseConfidenceScore'])))
-        decide = input("Would you like to PASS, ALLOW, or DROP: ")
+        decide = input("Would you like to PASS, ALLOW, or BLOCK: ")
         print(str(ip_addr) + decision(decide))
 
 
